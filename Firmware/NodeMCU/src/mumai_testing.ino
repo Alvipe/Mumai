@@ -13,8 +13,8 @@ typedef union {
 } binaryFloat;
 
 // WiFi parameters
-const char* ssid = "Ojete_inalambrico";
-const char* password = "ojetepiso9287";
+const char* ssid = "yourssid";
+const char* password = "yourpassword";
 WiFiServer server(80);
 
 // ADC parameters
