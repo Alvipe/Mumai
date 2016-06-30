@@ -14,53 +14,51 @@ def segmentation(emg, samples = 150):
     N = samples # number of samples per segment
     S = int(np.floor(emg.shape[0]/N)) # number of segments
     length = 0
-    emg_seg = np.zeros((N,S))
+    segmented_emg = np.zeros((N,S))
     for s in range(S):
         for n in range(length,N+length):
-            emg_seg[n-length,s] = emg[n] # 2D matrix with a EMG signal divided in s segments, each one with n samples
+            segmented_emg[n-length,s] = emg[n] # 2D matrix with a EMG signal divided in s segments, each one with n samples
         length = length + N
     length = 0
-    return emg_seg
+    return segmented_emg
 
-def mav(emg_seg):
-    mav = np.mean(np.abs(emg_seg))
+def mav(segment):
+    mav = np.mean(np.abs(segment))
     return mav
-    
-def rms(emg_seg):
-    rms = np.sqrt(np.mean(np.power(emg_seg,2)))
+
+def rms(segment):
+    rms = np.sqrt(np.mean(np.power(segment,2)))
     return rms
-    
-def var(emg_seg):
-    N = len(emg_seg)
-    var = 1.0/(N-1)*np.sum(np.power(emg_seg,2))
-#   var[s] = np.var(emg_seg[:,s])
+
+def var(segment):
+    var = np.var(segment)
     return var
-    
-def ssi(emg_seg):
-    ssi = np.sum(np.abs(np.power(emg_seg,2)))
+
+def ssi(segment):
+    ssi = np.sum(np.abs(np.power(segment,2)))
     return ssi
-    
-def zc(emg_seg):
-    zc = np.sum(np.diff(np.sign(emg_seg))!=0)
+
+def zc(segment):
+    zc = np.sum(np.diff(np.sign(segment))!=0)
     return zc
-    
-def wl(emg_seg):
-    wl = np.sum(np.abs(np.diff(emg_seg)))
+
+def wl(segment):
+    wl = np.sum(np.abs(np.diff(segment)))
     return wl
-    
-def ssc(emg_seg):
-    N = len(emg_seg)
+
+def ssc(segment):
+    N = len(segment)
     ssc = 0
     for n in range(N-1):
-        if n>0 and (emg_seg[n]-emg_seg[n-1])*(emg_seg[n]-emg_seg[n+1])>=0.001:
+        if n>0 and (segment[n]-segment[n-1])*(segment[n]-segment[n+1])>=0.001:
             ssc += 1
     return ssc
-    
-def wamp(emg_seg):
-    N = len(emg_seg)
+
+def wamp(segment):
+    N = len(segment)
     wamp = 0
     for n in range(N-1):
-        if np.abs(emg_seg[n]-emg_seg[n+1])>50:
+        if np.abs(segment[n]-segment[n+1])>50:
             wamp += 1
     return wamp
 
@@ -78,12 +76,11 @@ def feature_scaling(feature_matrix,target,reductor=None,scaler=None):
     minmax = MinMaxScaler(feature_range=(-1,1))
     if not reductor:
         reductor = lda.fit(feature_matrix,target)
-    feat_lda = reductor.transform(feature_matrix)
+    feature_matrix_lda = reductor.transform(feature_matrix)
     if not scaler:
-        scaler = minmax.fit(feat_lda)
-    feat_lda_scaled = scaler.transform(feat_lda)
-    
-    return feat_lda_scaled,reductor,scaler
+        scaler = minmax.fit(feature_matrix_lda)
+    feature_matrix_scaled = scaler.transform(feature_matrix_lda)
+    return feature_matrix_scaled,reductor,scaler
 
 def gestures(nSamples,nGestures):
     gestures = []
