@@ -20,9 +20,9 @@ emg = []
 segmented_emg = []
 
 for m in range(1,nGestures+1):
-        for i in range(nIterations):
-            for c in range(1,nChannels+1):
-                emg.append(emg_data['motion'+str(m)+'_ch'+str(c)][:,i]) #motion1_ch1_i1, motion1_ch2_i1, motion1_ch1_i2, motion1_ch2_i2
+    for i in range(nIterations):
+        for c in range(1,nChannels+1):
+            emg.append(emg_data['motion'+str(m)+'_ch'+str(c)][:,i]) #motion1_ch1_i1, motion1_ch2_i1, motion1_ch1_i2, motion1_ch2_i2
 
 ### Segmentation ###
 for n in range(len(emg)):
