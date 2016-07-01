@@ -39,7 +39,15 @@ def ssi(segment):
     return ssi
 
 def zc(segment):
-    zc = np.sum(np.diff(np.sign(segment))!=0)
+    nz_segment = []
+    nz_indices = np.nonzero(segment)[0] #Finds the indices of the segment with nonzero values
+    for m in nz_indices:
+        nz_segment.append(segment[m]) #The new segment contains only nonzero values    
+    N = len(nz_segment)
+    zc = 0
+    for n in range(N-1):
+        if((nz_segment[n]*nz_segment[n+1]<0) and np.abs(nz_segment[n]-nz_segment[n+1]) >= 0.001):
+            zc = zc + 1
     return zc
 
 def wl(segment):
@@ -49,10 +57,18 @@ def wl(segment):
 def ssc(segment):
     N = len(segment)
     ssc = 0
-    for n in range(N-1):
-        if n>0 and (segment[n]-segment[n-1])*(segment[n]-segment[n+1])>=0.001:
+    for n in range(1,N-1):
+        if (segment[n]-segment[n-1])*(segment[n]-segment[n+1])>=0.001:
             ssc += 1
     return ssc
+
+#def ssc(segment):
+#    N = len(segment)
+#    ssc = 0
+#    for n in range(1,N-1):
+#        if ((segment[n]>segment[n-1] and segment[n]>segment[n+1]) or (segment[n]<segment[n-1] and segment[n]<segment[n+1]) and ((np.abs(segment[n]-segment[n+1])>=0.001) or (np.abs(segment[n]-segment[n-1])>=0.001))):
+#            ssc += 1
+#    return ssc
 
 def wamp(segment):
     N = len(segment)
