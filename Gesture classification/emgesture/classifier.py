@@ -5,7 +5,6 @@ Created on Fri Nov  6 14:10:10 2015
 @author: Alvaro
 """
 
-import numpy as np
 from sklearn.svm import SVC
 from sklearn.externals import joblib
 

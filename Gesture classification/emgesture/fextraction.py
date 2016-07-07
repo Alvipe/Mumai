@@ -46,7 +46,7 @@ def zc(segment):
     N = len(nz_segment)
     zc = 0
     for n in range(N-1):
-        if((nz_segment[n]*nz_segment[n+1]<0) and np.abs(nz_segment[n]-nz_segment[n+1]) >= 0.001):
+        if((nz_segment[n]*nz_segment[n+1]<0) and np.abs(nz_segment[n]-nz_segment[n+1]) >= 1e-4):
             zc = zc + 1
     return zc
 
@@ -54,27 +54,27 @@ def wl(segment):
     wl = np.sum(np.abs(np.diff(segment)))
     return wl
 
-def ssc(segment):
-    N = len(segment)
-    ssc = 0
-    for n in range(1,N-1):
-        if (segment[n]-segment[n-1])*(segment[n]-segment[n+1])>=0.001:
-            ssc += 1
-    return ssc
-
 #def ssc(segment):
 #    N = len(segment)
 #    ssc = 0
 #    for n in range(1,N-1):
-#        if ((segment[n]>segment[n-1] and segment[n]>segment[n+1]) or (segment[n]<segment[n-1] and segment[n]<segment[n+1]) and ((np.abs(segment[n]-segment[n+1])>=0.001) or (np.abs(segment[n]-segment[n-1])>=0.001))):
+#        if (segment[n]-segment[n-1])*(segment[n]-segment[n+1])>=1e-4:
 #            ssc += 1
 #    return ssc
+
+def ssc(segment):
+    N = len(segment)
+    ssc = 0
+    for n in range(1,N-1):
+        if ((segment[n]>segment[n-1] and segment[n]>segment[n+1]) or (segment[n]<segment[n-1] and segment[n]<segment[n+1]) and ((np.abs(segment[n]-segment[n+1])>=1e-4) or (np.abs(segment[n]-segment[n-1])>=1e-4))):
+            ssc += 1
+    return ssc
 
 def wamp(segment):
     N = len(segment)
     wamp = 0
     for n in range(N-1):
-        if np.abs(segment[n]-segment[n+1])>50:
+        if np.abs(segment[n]-segment[n+1])>1e-4:
             wamp += 1
     return wamp
 

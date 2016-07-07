@@ -11,11 +11,12 @@ from sklearn.cross_validation import train_test_split
 from sklearn.svm import SVC
 
 # Data loading
-emg_data = np.load('emg_data_5class_2channel.npy').item()
+emg_data = np.load('emg_data_5class_2channel.npy',encoding='latin1').item()
 
 nGestures = 5
-nChannels = 2
 nIterations = 5
+nChannels = 2
+nSignals = nGestures*nIterations*nChannels
 emg = []
 segmented_emg = []
 
@@ -24,7 +25,8 @@ for m in range(1,nGestures+1):
         for c in range(1,nChannels+1):
             emg.append(emg_data['motion'+str(m)+'_ch'+str(c)][:,i]) #motion1_ch1_i1, motion1_ch2_i1, motion1_ch1_i2, motion1_ch2_i2
 
-nSignals = len(emg)
+#for z in range(nSignals):
+#    emg[z] = emg[z]*(5/2)/2**24
 
 # Segmentation
 for n in range(nSignals):
@@ -35,7 +37,7 @@ feature_list = [fex.mav, fex.rms, fex.var, fex.ssi, fex.zc, fex.wl, fex.ssc, fex
 
 nSegments = len(segmented_emg[0][0])
 nFeatures = len(feature_list)
-feature_matrix = np.zeros((nSegments*nGestures*nIterations,nFeatures*nChannels))
+feature_matrix = np.zeros((nGestures*nIterations*nSegments,nFeatures*nChannels))
 n = 0
 
 for i in range(0,nSignals,nChannels):
@@ -44,7 +46,7 @@ for i in range(0,nSignals,nChannels):
         n = n + 1
 
 # Target matrix generation
-y = fex.gestures(nSegments*nIterations,nGestures)
+y = fex.gestures(nIterations*nSegments,nGestures)
 
 # Dimensionality reduction and feature scaling
 [X,reductor,scaler] = fex.feature_scaling(feature_matrix, y)
