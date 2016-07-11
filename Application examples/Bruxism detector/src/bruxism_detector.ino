@@ -47,7 +47,7 @@ moving average rectifies and smooths the signal (acts as a low pass filter),
 returning the amplitude of the signal. */
 void movAv()
 {
-    float emgZero = emg*adcConv - emgMean; // Signal with 0 V baseline
+    double emgZero = emg*adcConv - emgMean; // Signal with 0 V baseline
     emgMovav = emgMovav*0.99 + abs(emgZero)*0.01; // Rectified and smoothed signal
 }
 
